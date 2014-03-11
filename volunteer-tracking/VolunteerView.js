@@ -1,6 +1,4 @@
 function VolunteerView() {
-  ClassUtil.inherit(VolunteerView, this, Widget);
-  this._super("VolunteerView");
 
   // Manipulate HTML located in variable "this.widget" as needed here, before display.
   new PageHeaderWidget("Volunteer Tracking");
@@ -17,24 +15,39 @@ function VolunteerView() {
       return volunteer.getName();
   });
 
-  volunteerTable.renderMetisData(Metis, "VolunteerModel");
+  volunteerTable.addHeader('', 'Actions');
+  volunteerTable.addColumn(function (volunteer) {
+    var panel = new HorizontalPanelWidget(false);
+    new ButtonWidget('Archive', this, 'clickedArchiveVolunteer', volunteer);
+    panel.finish();
+  });
+
+  volunteerTable.renderMetisData(Metis, "Volunteers");
   this.volunteerTable = volunteerTable;
 
   volunteerTable.setClickHandler(this, function (volunteer) {
     console.log("invoke edit volunteer dialog");
-    /*
-        var dialog = new EditMeal("edit", meal);
-        dialog.setRefreshHandler(this, function() {
-            this.mealTable.renderMetisData(Metis, "Meals");
-        });
-    */
+
+    var dialog = new EditVolunteerView(volunteer);
+    dialog.setRefreshHandler(this, function () {
+      this.volunteerTable.renderMetisData(Metis, 'Volunteers');
+    });
   });
 
-  // This attaches the HTML to the current insert location
-  this.attach();
 }
 
 // Write class methods like this
 VolunteerView.prototype.clickedAddVolunteer = function() {
+  console.log("clickedAddVolunteer fired!");
+  var dialog = new EditVolunteerView();
 
+  dialog.setRefreshHandler(this, function () {
+    this.volunteerTable.refreshTable();
+  });
+};
+
+VolunteerView.prototype.clickedArchiveVolunteer = function (volunteer) {
+  console.log('clicked archive volunteer');
+  // set the archived flag to true
+  // filter out of the main view
 };
