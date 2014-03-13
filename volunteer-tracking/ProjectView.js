@@ -7,10 +7,17 @@ function ProjectView() {
   new QuickAddButtonWidget("Add New Project", this, "clickedAddProject");
   new LineBreakWidget();
 
+  var volunteers = [];
+  var metisLoader = new MetisLoader('Volunteers');
+  Metis.load(metisLoader, this, function () {
+    volunteers = metisLoader.getList();
+    console.log('volunteer list: ', volunteers);
+  });
+
   var projectTable = new DataTableWidget(this, 'projectTable');
   searchWidget.setTable(projectTable);
 
-  projectTable.addHeader('Projects', 'name', true, 300);
+  projectTable.addHeader('Projects', 'name', true);
   projectTable.addColumn(function (project) {
     return project.getName();
   });
@@ -21,13 +28,10 @@ function ProjectView() {
   // MarkerWidget and DataTableWidget.setPostRender might be useful here
   projectTable.addHeader('Project Lead', 'volunteerId', true);
   projectTable.addColumn(function (project) {
-    // load all volunteers, then map to an id
-    var metisLoader = new MetisLoader('Volunteers');
-    Metis.load(metisLoader, this, function () {
-      var volunteers = metisLoader.getList();
-      console.log('volunteer list: ', volunteers);
-    });
-    return project.getVolunteerId();
+
+    new EasySelectorWidget(volunteers, "id", "name");
+
+    //return project.getVolunteerId();
   });
 
   projectTable.addHeader('Description', 'description', true);
@@ -35,7 +39,7 @@ function ProjectView() {
     return project.getDescription();
   });
 
-  projectTable.addHeader('When', 'datetime', true, 300);
+  projectTable.addHeader('When', 'datetime', true, true, 300);
   projectTable.addColumn(function (project) {
     return project.getDatetime();
   });

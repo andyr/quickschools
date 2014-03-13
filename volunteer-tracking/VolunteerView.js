@@ -10,7 +10,7 @@ function VolunteerView() {
   var volunteerTable = new DataTableWidget(this, "volunteerTable");
   searchWidget.setTable(volunteerTable);
 
-  volunteerTable.addHeader("Volunteer", "name", true, 300);
+  volunteerTable.addHeader("Volunteer", "name", true, true, 300);
   volunteerTable.addColumn(function(volunteer) {
       return volunteer.getName();
   });
@@ -27,9 +27,7 @@ function VolunteerView() {
 
   volunteerTable.addHeader('', 'Actions');
   volunteerTable.addColumn(function (volunteer) {
-    var panel = new HorizontalPanelWidget(false);
     new ButtonWidget('Archive', this, 'clickedArchiveVolunteer', volunteer);
-    panel.finish();
   });
 
   volunteerTable.renderMetisData(Metis, "Volunteers");
