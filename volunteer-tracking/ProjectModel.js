@@ -3,7 +3,7 @@ function ProjectModel() {
   this.volunteerId;
   this.name;
   this.description;
-  this.datetime;
+  this.datetime = new Date();
 }
 
 Metis.define(ProjectModel, 'Projects', 'id', 'volunteerId', 'name', 'description', 'datetime');

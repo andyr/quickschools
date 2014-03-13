@@ -43,7 +43,8 @@ function ProjectView() {
   
     projectTable.addHeader('When', 'datetime', true, true, 300);
     projectTable.addColumn(function (project) {
-      return project.getDatetime();
+      console.log("rendering datetime for project: ", project)
+      return project.getDatetime().toDateString();
     });
 
   });

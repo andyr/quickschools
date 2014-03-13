@@ -31,9 +31,25 @@ function EditProjectView(project) {
                         new DropDownWidget(volunteerList, "id", "name"), 
                         ['notEmpty']);
   
-    addFieldToPanel('When', 'datetime');
+    //addFieldToPanel('When', 'datetime');
+    panel.addLabel('When');
+    this.queryFields.put('datetime',
+                        new DateWidget(new Date()),
+                        ['notEmpty']);
+
   
     panel.finish();
+
+    // if project is truthy, we are editing something
+    if(project) {
+        new DeleteOption("Delete", "Click below to delete this project.", this, function() {
+            Metis.remove(project, this, function() {
+                this.closeDialogBox();
+                this.refreshAction.call();
+            });
+        });
+      }
+
   });
 
 }
@@ -45,7 +61,7 @@ EditProjectView.prototype.clickedSave = function () {
   this.project.setName(this.queryFields.getValue('name'));
   this.project.setDescription(this.queryFields.getValue('description'));
   this.project.setVolunteerId(this.queryFields.getValue('volunteerId'));
-  this.project.setDatetime((new Date()).toDateString()); // change type in the model
+  this.project.setDatetime(new Date(this.queryFields.getValue('datetime')));
 
   Metis.save(this.project, this, function () {
     this.closeDialogBox();
