@@ -12,18 +12,19 @@ function VolunteerView() {
 
 VolunteerView.prototype.render = function () {
   // refreshTable() fails if using DataTableWidget with a list, so re-rendering like this.
-  var loader = new InlineLoadingWidget("Loading volunteers...");
-  
-  var metisLoader = new MetisLoader("Volunteers");
-  // Note: platform doesn't support filtering on null values
-  metisLoader.setFilters([new EqFilter('archived', false)]);
-
-  Metis.load(metisLoader, this, function() {
-      var volunteers = metisLoader.getList();
-      console.log("all volunteers: ", volunteers);
-      loader.close();
-      this.renderTable(volunteers);
-  });
+  //var loader = new InlineLoadingWidget("Loading volunteers...");
+  //
+  //var metisLoader = new MetisLoader("Volunteers");
+  //// Note: platform doesn't support filtering on null values
+  //metisLoader.setFilters([new EqFilter('archived', false)]);
+//
+  //Metis.load(metisLoader, this, function() {
+  //    var volunteers = metisLoader.getList();
+  //    console.log("all volunteers: ", volunteers);
+  //    loader.close();
+  //    this.renderTable(volunteers);
+  //});
+  this.renderTable();
 };
 
 VolunteerView.prototype.renderTable = function (volunteers) {
@@ -62,7 +63,8 @@ VolunteerView.prototype.renderTable = function (volunteers) {
   });
 
   //volunteerTable.renderMetisData(Metis, "Volunteers");
-  volunteerTable.renderList(volunteers);
+  volunteerTable.renderMetisData(Metis, 'Volunteers', new EqFilter('archived', false))
+  //volunteerTable.renderList(volunteers);
   this.volunteerTable = volunteerTable;
 
   volunteerTable.setClickHandler(this, function (volunteer) {
@@ -70,8 +72,8 @@ VolunteerView.prototype.renderTable = function (volunteers) {
 
     var dialog = new EditVolunteerView(volunteer);
     dialog.setRefreshHandler(this, function () {
-      volunteerTable.renderList(volunteers);
-      //this.volunteerTable.renderMetisData(Metis, 'Volunteers');
+      //volunteerTable.renderList(volunteers);
+      this.volunteerTable.renderMetisData(Metis, 'Volunteers', new EqFilter('archived', false));
     });
   });
 };
@@ -82,8 +84,8 @@ VolunteerView.prototype.clickedAddVolunteer = function() {
   var dialog = new EditVolunteerView();
 
   dialog.setRefreshHandler(this, function () {
-    //this.volunteerTable.refreshTable();
-    this.render();
+    this.volunteerTable.refreshTable();
+    //this.render();
   });
 };
 
@@ -94,8 +96,8 @@ VolunteerView.prototype.clickedArchiveVolunteer = function (volunteer) {
 
   Metis.save(volunteer, this, function () {
     console.log('changed archived state; refreshing table...');
-    //this.volunteerTable.refreshTable();
-    this.render();
+    this.volunteerTable.refreshTable();
+    //this.render();
   });
 
   // filter out of the main view
