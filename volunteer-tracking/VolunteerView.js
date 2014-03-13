@@ -15,6 +15,16 @@ function VolunteerView() {
       return volunteer.getName();
   });
 
+  volunteerTable.addHeader("Phone", "phone", true);
+  volunteerTable.addColumn(function(volunteer) {
+      return volunteer.getPhone();
+  });
+
+  volunteerTable.addHeader("Address", "address", true);
+  volunteerTable.addColumn(function(volunteer) {
+      return volunteer.getAddress();
+  });
+
   volunteerTable.addHeader('', 'Actions');
   volunteerTable.addColumn(function (volunteer) {
     var panel = new HorizontalPanelWidget(false);

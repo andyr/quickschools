@@ -19,7 +19,7 @@ function ProjectView() {
   // figure out which projects were rendered, then load the volunteers, 
   // then insert the volunteer names (which appear slightly delayed).
   // MarkerWidget and DataTableWidget.setPostRender might be useful here
-  projectTable.addHeader('Project Lead', 'volunteerId');
+  projectTable.addHeader('Project Lead', 'volunteerId', true);
   projectTable.addColumn(function (project) {
     // load all volunteers, then map to an id
     var metisLoader = new MetisLoader('Volunteers');
@@ -28,6 +28,11 @@ function ProjectView() {
       console.log('volunteer list: ', volunteers);
     });
     return project.getVolunteerId();
+  });
+
+  projectTable.addHeader('Description', 'description', true);
+  projectTable.addColumn(function (project) {
+    return project.getDescription();
   });
 
   projectTable.addHeader('When', 'datetime', true, 300);
