@@ -1,7 +1,7 @@
 function VolunteerView() {
 
   // Manipulate HTML located in variable "this.widget" as needed here, before display.
-  new PageHeaderWidget("Volunteer Tracking");
+  new PageHeaderWidget("Volunteers");
   var searchWidget = new SearchWidget();
   
   new QuickAddButtonWidget("Add New Volunteer", this, "clickedAddVolunteer");
@@ -60,7 +60,14 @@ VolunteerView.prototype.clickedAddVolunteer = function() {
 };
 
 VolunteerView.prototype.clickedArchiveVolunteer = function (volunteer) {
-  console.log('clicked archive volunteer');
-  // set the archived flag to true
+  console.log('clicked archive volunteer', volunteer);
+
+  volunteer.setArchived(true);
+
+  Metis.save(volunteer, this, function () {
+    console.log('changed archived state; refreshing table...');
+    this.volunteerTable.refreshTable();
+  });
+
   // filter out of the main view
 };

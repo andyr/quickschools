@@ -30,11 +30,11 @@ function EditProjectView(project) {
   
     addFieldToPanel('Name', 'name');
     addFieldToPanel('Description', 'description');
-    //addFieldToPanel('Project Lead', 'volunteerId'); // add by id?
+
     panel.addLabel('Volunteer');
     this.queryFields.put('volunteerId', 
-                        new InputFieldWidget(),
-                        //new DropDownWidget(volunteerList, "volunteerId", "name"), 
+                        //new InputFieldWidget(),
+                        new DropDownWidget(volunteerList, "volunteerId", "name"), 
                         ['notEmpty']);
   
     addFieldToPanel('When', 'datetime');
@@ -51,7 +51,7 @@ EditProjectView.prototype.clickedSave = function () {
   this.project.setName(this.queryFields.getValue('name'));
   this.project.setDescription(this.queryFields.getValue('description'));
   this.project.setVolunteerId(this.queryFields.getValue('volunteerId'));
-  this.project.setDatetime((new Date()).toDateString()); // Not sure if this will sort properly
+  this.project.setDatetime((new Date()).toDateString()); // change type in the model
 
   Metis.save(this.project, this, function () {
     this.closeDialogBox();
