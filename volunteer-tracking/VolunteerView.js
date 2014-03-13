@@ -1,6 +1,32 @@
 function VolunteerView() {
 
   // Manipulate HTML located in variable "this.widget" as needed here, before display.
+  // refactor
+  // - move render into a separate function
+  // - setup a loader and filter
+  // - call table on filtered dataset
+
+  this.render();
+
+}
+
+VolunteerView.prototype.render = function () {
+  // refreshTable() fails if using DataTableWidget with a list, so re-rendering like this.
+  var loader = new InlineLoadingWidget("Loading volunteers...");
+  
+  var metisLoader = new MetisLoader("Volunteers");
+  // Note: platform doesn't support filtering on null values
+  metisLoader.setFilters([new EqFilter('archived', false)]);
+
+  Metis.load(metisLoader, this, function() {
+      var volunteers = metisLoader.getList();
+      console.log("all volunteers: ", volunteers);
+      loader.close();
+      this.renderTable(volunteers);
+  });
+};
+
+VolunteerView.prototype.renderTable = function (volunteers) {
   new PageHeaderWidget("Volunteers");
   var searchWidget = new SearchWidget();
   
@@ -35,7 +61,8 @@ function VolunteerView() {
     new ButtonWidget('Archive', this, 'clickedArchiveVolunteer', volunteer);
   });
 
-  volunteerTable.renderMetisData(Metis, "Volunteers");
+  //volunteerTable.renderMetisData(Metis, "Volunteers");
+  volunteerTable.renderList(volunteers);
   this.volunteerTable = volunteerTable;
 
   volunteerTable.setClickHandler(this, function (volunteer) {
@@ -43,11 +70,11 @@ function VolunteerView() {
 
     var dialog = new EditVolunteerView(volunteer);
     dialog.setRefreshHandler(this, function () {
-      this.volunteerTable.renderMetisData(Metis, 'Volunteers');
+      volunteerTable.renderList(volunteers);
+      //this.volunteerTable.renderMetisData(Metis, 'Volunteers');
     });
   });
-
-}
+};
 
 // Write class methods like this
 VolunteerView.prototype.clickedAddVolunteer = function() {
@@ -55,7 +82,8 @@ VolunteerView.prototype.clickedAddVolunteer = function() {
   var dialog = new EditVolunteerView();
 
   dialog.setRefreshHandler(this, function () {
-    this.volunteerTable.refreshTable();
+    //this.volunteerTable.refreshTable();
+    this.render();
   });
 };
 
@@ -66,7 +94,8 @@ VolunteerView.prototype.clickedArchiveVolunteer = function (volunteer) {
 
   Metis.save(volunteer, this, function () {
     console.log('changed archived state; refreshing table...');
-    this.volunteerTable.refreshTable();
+    //this.volunteerTable.refreshTable();
+    this.render();
   });
 
   // filter out of the main view
