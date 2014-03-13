@@ -8,6 +8,9 @@ function EditProjectView(project) {
 
   var volunteers = [];
   var volunteerList = [];
+  var _this = this;
+  var leftWidth = 120;
+
   var metisLoader = new MetisLoader('Volunteers');
   Metis.load(metisLoader, this, function () {
     volunteerList = metisLoader.getList();
@@ -15,30 +18,29 @@ function EditProjectView(project) {
       volunteers[volunteerList[i].id] = volunteerList[i].name;
     }
     console.log('volunteer list: ', volunteers);
+
+    // setup pane after volunteers are loaded
+    var panel = new QueryPanelWidget(leftWidth);
+    this.queryFields = new QueryFields(panel, this.project);
+  
+    function addFieldToPanel(label, column) {
+      panel.addLabel(label);
+      _this.queryFields.put(column, new InputFieldWidget(), ['notEmpty']);
+    }
+  
+    addFieldToPanel('Name', 'name');
+    addFieldToPanel('Description', 'description');
+    //addFieldToPanel('Project Lead', 'volunteerId'); // add by id?
+    panel.addLabel('Volunteer');
+    this.queryFields.put('volunteerId', 
+                        new InputFieldWidget(),
+                        //new DropDownWidget(volunteerList, "volunteerId", "name"), 
+                        ['notEmpty']);
+  
+    addFieldToPanel('When', 'datetime');
+  
+    panel.finish();
   });
-
-  var _this = this;
-  var leftWidth = 120;
-  var panel = new QueryPanelWidget(leftWidth);
-  this.queryFields = new QueryFields(panel, this.project);
-
-  function addFieldToPanel(label, column) {
-    panel.addLabel(label);
-    _this.queryFields.put(column, new InputFieldWidget(), ['notEmpty']);
-  }
-
-  addFieldToPanel('Name', 'name');
-  addFieldToPanel('Description', 'description');
-  //addFieldToPanel('Project Lead', 'volunteerId'); // add by id?
-  panel.addLabel('Volunteer');
-  this.queryFields.put('volunteerId', 
-                      new InputFieldWidget(),
-                      //new DropDownWidget(volunteers, "id", "name"), 
-                      ['notEmpty']);
-
-  addFieldToPanel('When', 'datetime');
-
-  panel.finish();
 
 }
 

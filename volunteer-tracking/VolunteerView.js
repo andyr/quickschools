@@ -10,6 +10,11 @@ function VolunteerView() {
   var volunteerTable = new DataTableWidget(this, "volunteerTable");
   searchWidget.setTable(volunteerTable);
 
+  volunteerTable.addHeader("Id", "id", true);
+  volunteerTable.addColumn(function(volunteer) {
+      return volunteer.getId();
+  });
+
   volunteerTable.addHeader("Volunteer", "name", true, true, 300);
   volunteerTable.addColumn(function(volunteer) {
       return volunteer.getName();
