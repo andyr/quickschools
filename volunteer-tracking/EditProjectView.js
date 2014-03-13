@@ -6,6 +6,17 @@ function EditProjectView(project) {
   this.dialog.setOkCancel(this, 'clickedSave');
   this.project = project;
 
+  var volunteers = [];
+  var volunteerList = [];
+  var metisLoader = new MetisLoader('Volunteers');
+  Metis.load(metisLoader, this, function () {
+    volunteerList = metisLoader.getList();
+    for(var i=0; i<volunteerList.length; i++) {
+      volunteers[volunteerList[i].id] = volunteerList[i].name;
+    }
+    console.log('volunteer list: ', volunteers);
+  });
+
   var _this = this;
   var leftWidth = 120;
   var panel = new QueryPanelWidget(leftWidth);
@@ -18,7 +29,13 @@ function EditProjectView(project) {
 
   addFieldToPanel('Name', 'name');
   addFieldToPanel('Description', 'description');
-  addFieldToPanel('Project Lead', 'volunteerId'); // add by id?
+  //addFieldToPanel('Project Lead', 'volunteerId'); // add by id?
+  panel.addLabel('Volunteer');
+  this.queryFields.put('volunteerId', 
+                      new InputFieldWidget(),
+                      //new DropDownWidget(volunteers, "id", "name"), 
+                      ['notEmpty']);
+
   addFieldToPanel('When', 'datetime');
 
   panel.finish();

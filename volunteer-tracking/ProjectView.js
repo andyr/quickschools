@@ -8,9 +8,13 @@ function ProjectView() {
   new LineBreakWidget();
 
   var volunteers = [];
+  var volunteerList = [];
   var metisLoader = new MetisLoader('Volunteers');
   Metis.load(metisLoader, this, function () {
-    volunteers = metisLoader.getList();
+    volunteerList = metisLoader.getList();
+    for(var i=0; i<volunteerList.length; i++) {
+      volunteers[volunteerList[i].id] = volunteerList[i].name;
+    }
     console.log('volunteer list: ', volunteers);
   });
 
@@ -22,16 +26,13 @@ function ProjectView() {
     return project.getName();
   });
 
-  // TODO: not sure how to retrieve this during table rendering, render the table first, 
-  // figure out which projects were rendered, then load the volunteers, 
-  // then insert the volunteer names (which appear slightly delayed).
   // MarkerWidget and DataTableWidget.setPostRender might be useful here
   projectTable.addHeader('Project Lead', 'volunteerId', true);
   projectTable.addColumn(function (project) {
+    //new EasySelectorWidget(volunteers, "id", "name");
 
-    new EasySelectorWidget(volunteers, "id", "name");
-
-    //return project.getVolunteerId();
+    return project.getVolunteerId(); // TODO: display the name (using postrender on the table)
+    //return volunteers[project.getVolunteerId()] || "";
   });
 
   projectTable.addHeader('Description', 'description', true);
@@ -55,12 +56,6 @@ function ProjectView() {
       this.projectTable.renderMetisData(Metis, 'Projects');
     });
   });
-
-  // TODO: add edit handler (updating project lead)
-
-  // TODO: lead volunteer (update table relationship)
-  // Test: Sort table by date
-  // Test: edit project lead
 
 }
 
