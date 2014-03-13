@@ -6,7 +6,6 @@ function EditProjectView(project) {
   this.dialog.setOkCancel(this, 'clickedSave');
   this.project = project;
 
-  var volunteers = [];
   var volunteerList = [];
   var _this = this;
   var leftWidth = 120;
@@ -14,10 +13,6 @@ function EditProjectView(project) {
   var metisLoader = new MetisLoader('Volunteers');
   Metis.load(metisLoader, this, function () {
     volunteerList = metisLoader.getList();
-    for(var i=0; i<volunteerList.length; i++) {
-      volunteers[volunteerList[i].id] = volunteerList[i].name;
-    }
-    console.log('volunteer list: ', volunteers);
 
     // setup pane after volunteers are loaded
     var panel = new QueryPanelWidget(leftWidth);
@@ -31,8 +26,6 @@ function EditProjectView(project) {
     addFieldToPanel('Name', 'name');
     addFieldToPanel('Description', 'description');
 
-    //console.log('volunteerList:', volunteerList);
-    //console.log('volunteers', volunteers);
     panel.addLabel('Volunteer');
     this.queryFields.put('volunteerId', 
                         new DropDownWidget(volunteerList, "id", "name"), 
