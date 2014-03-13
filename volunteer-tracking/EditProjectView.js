@@ -31,10 +31,11 @@ function EditProjectView(project) {
     addFieldToPanel('Name', 'name');
     addFieldToPanel('Description', 'description');
 
+    //console.log('volunteerList:', volunteerList);
+    //console.log('volunteers', volunteers);
     panel.addLabel('Volunteer');
     this.queryFields.put('volunteerId', 
-                        //new InputFieldWidget(),
-                        new DropDownWidget(volunteerList, "volunteerId", "name"), 
+                        new DropDownWidget(volunteerList, "id", "name"), 
                         ['notEmpty']);
   
     addFieldToPanel('When', 'datetime');
