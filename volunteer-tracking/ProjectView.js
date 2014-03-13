@@ -21,6 +21,12 @@ function ProjectView() {
   // MarkerWidget and DataTableWidget.setPostRender might be useful here
   projectTable.addHeader('Project Lead', 'volunteerId');
   projectTable.addColumn(function (project) {
+    // load all volunteers, then map to an id
+    var metisLoader = new MetisLoader('Volunteers');
+    Metis.load(metisLoader, this, function () {
+      var volunteers = metisLoader.getList();
+      console.log('volunteer list: ', volunteers);
+    });
     return project.getVolunteerId();
   });
 

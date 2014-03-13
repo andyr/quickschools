@@ -6,6 +6,6 @@ function ProjectModel() {
   this.datetime;
 }
 
-Metis.define(ProjectModel, 'Projects', 'id', 'name', 'description', 'datetime');
+Metis.define(ProjectModel, 'Projects', 'id', 'volunteerId', 'name', 'description', 'datetime');
 Metis.defineSortColumn(ProjectModel, 'datetime', 'desc');
 Metis.createGettersAndSetters(ProjectModel);
