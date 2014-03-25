@@ -20,8 +20,14 @@ function SessionManager() {
   /*
     prob not a separate obj, but the view invokes functions
     like storage of the userid-subject-workset
-    
+
   */
 }
 
+function Student() {
+  // name, workbook
+}
 
+function StudentWorkbook() {
+  // full page dialog when clicking on a student
+}
