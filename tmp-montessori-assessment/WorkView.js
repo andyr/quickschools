@@ -42,15 +42,6 @@ WorkView.prototype.renderTable = function (worksetId) {
   });
 
   workTable.renderMetisData(Metis, 'Work', new EqFilter('workSetId', worksetId));
-  // These rows aren't clickable (consistency)
-  //workTable.setClickHandler(this, function (work) {
-  //  console.log('Edit work', work);
-  //  var dialog = new EditWorkView(work);
-  //  dialog.setRefreshHandler(this, function () {
-  //    workTable.renderMetisData(Metis, 'Work', new EqFilter('workSetId', worksetId));
-  //  });
-  //});
-
   this.workTable = workTable;
 };
 

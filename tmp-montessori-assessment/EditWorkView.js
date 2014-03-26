@@ -17,7 +17,7 @@ function EditWorkView(work) {
     this.queryFields = new QueryFields(panel, this.work);
   
     panel.addLabel('WorkSet');
-    this.queryFields.put('workSetId', new DropDownWidget(worksets, 'id', 'name')); // populate dropdown with workset list
+    this.queryFields.put('workSetId', new DropDownWidget(worksets, 'id', 'name'));
   
     panel.addLabel('Description');
     this.queryFields.put('description', new InputFieldWidget());
@@ -34,11 +34,6 @@ function EditWorkView(work) {
     }
 
   });
-
-
-
-
-
 }
 
 EditWorkView.prototype.clickedSave = function () {
