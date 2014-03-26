@@ -7,25 +7,38 @@ function EditWorkView(work) {
   this.dialog.setOkCancel(this, 'clickedSave');
 
   var leftWidth = 120;
-  var panel = new QueryPanelWidget(leftWidth);
-  this.queryFields = new QueryFields(panel, this.work);
 
-  panel.addLabel('WorkSet');
-  this.queryFields.put('workSetId', new DropDownWidget()); // populate dropdown with workset list
+  var metisLoader = new MetisLoader('Workset');
+  Metis.load(metisLoader, this, function () {
 
-  panel.addLabel('Description');
-  this.queryFields.put('description', new InputFieldWidget());
+    var worksets = metisLoader.getList();
 
-  panel.finish();
+    var panel = new QueryPanelWidget(leftWidth);
+    this.queryFields = new QueryFields(panel, this.work);
+  
+    panel.addLabel('WorkSet');
+    this.queryFields.put('workSetId', new DropDownWidget(worksets, 'id', 'name')); // populate dropdown with workset list
+  
+    panel.addLabel('Description');
+    this.queryFields.put('description', new InputFieldWidget());
+  
+    panel.finish();
+  
+    if(work) {
+      new DeleteOption('Delete', 'Click to delete this work.', this, function () {
+        Metis.remove(work, this, function () {
+          this.closeDialogBox();
+          this.refreshAction.call();
+        });
+      });
+    }
 
-  if(work) {
-    new DeleteOption('Delete', 'Click to delete this work.', this, function () {
-      Metis.remove(work, this, function () {
-        this.closeDialogBox();
-        this.refreshAction.call();
-      })
-    });
-  }
+  });
+
+
+
+
+
 }
 
 EditWorkView.prototype.clickedSave = function () {
