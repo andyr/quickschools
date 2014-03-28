@@ -26,6 +26,8 @@ function EditWorkSetView(workset) {
       })
     });
   }
+
+  this.dialog.reposition();
 }
 
 EditWorkSetView.prototype.clickedSave = function () {

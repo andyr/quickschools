@@ -1,6 +1,9 @@
 function WorkSetView() {
   console.log('rendering worksets');
   
+  new QuickAddButtonWidget("Add New WorkSet", this, "clickedAddWorkset");
+  new LineBreakWidget();
+
   // render workset table: [name, description, edit]; link the name
   var worksetTable = new DataTableWidget(this, 'worksetTable');
 
