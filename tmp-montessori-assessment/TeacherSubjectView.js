@@ -1,12 +1,14 @@
 function TeacherSubjectView() {
   // find the logged in userId
-  console.log('Storage: ', Storage, Storage.get('userid'), Storage.get('teacher-subject'));
+  this.userId = globalVariables.userObject.getData("id");
+  console.log('Storage: ', Storage, this.userId);
 
   new HeaderWidget('Current subject for ' + Storage.get('userid') + ': [selected subject]');
   // Set up as a component and put these calls in separate containers
   new LineBreakWidget();
   // if not Storage.get(userId)==teacher-subject:
   //    if loggedInUser can see TeacherDropdown
+  this.topMarker = new MarkerWidget(); // Mark UI position for rendering
   this.renderTeacherDropdown();
   //    else
   //      teacherId = userId
@@ -14,9 +16,6 @@ function TeacherSubjectView() {
   // listen for changes to either and invoke callbacks
   //    Storage.put(teacher-subject(s?))
   //    update the header widget display
-
-  new StudentAssessmentView();  // student table
-
 }
 
 TeacherSubjectView.prototype.renderTeacherDropdown = function () {
@@ -24,8 +23,9 @@ TeacherSubjectView.prototype.renderTeacherDropdown = function () {
 };
 
 TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) {
-  var _this = this;
   this.teachers = pagedTeachers.list;
+
+  this.topMarker.activate();
   this.panel = new QueryPanelWidget(250);
 
   this.queryFields = new QueryFields(this.panel); // don't use the initDynamicInfo arg, produces error
@@ -39,29 +39,27 @@ TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) 
 };
 
 TeacherSubjectView.prototype.renderSubjectDropDown = function (ev) {
-  console.log('renderSubjectDropDown this: ', this, ev); // pull out scope obj and get value from that
   var scope = ev ? ev.data.scope : this;
-  //console.log('scope obj', scope)
   this.teacherId = scope.queryFields.getValue('teacher');
   Rest.get('/sms/v1/sections', {}, this, this.subjectDropdownCallback);
 };
 
 TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
   var subjectsForTeacher = [];
+  this.topMarker.setActive();
   console.log('collecting subjects for selected teacher: ', this.teacherId);
 
   for(var i=0; i<subjects.length; i++) {
     var subject = subjects[i];
     var teacherIds = $.map(subject['teachers'], function (teacher) { return teacher.id; });
     if( $.inArray(this.teacherId, teacherIds) > -1 ) {
-
-      //subjectsForTeacher.push({ subject.id : subject.sectionName });
       subjectsForTeacher.push({
         'id': subject.id,
         'name': subject.className + " " + subject.sectionName
       });
     }
   }
+
 
   this.panel.addLabel('Subjects');
   if(this.subjectDropDown) {
@@ -71,7 +69,7 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
   this.subjectDropDown.widget.on('change', this.changeSubjectCallback);
   this.queryFields.put('subject', this.subjectDropDown);
 
-  this.panel.finish(); // serialize?
+  this.panel.finish();
 };
 
 TeacherSubjectView.prototype.changeSubjectCallback = function () {
