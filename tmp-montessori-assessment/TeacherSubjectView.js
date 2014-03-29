@@ -40,8 +40,8 @@ TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) 
 
 TeacherSubjectView.prototype.renderSubjectDropDown = function (ev) {
   var scope = ev ? ev.data.scope : this;
-  this.teacherId = scope.queryFields.getValue('teacher');
-  Rest.get('/sms/v1/sections', {}, this, this.subjectDropdownCallback);
+  scope.teacherId = scope.queryFields.getValue('teacher');
+  Rest.get('/sms/v1/sections', {}, scope, scope.subjectDropdownCallback);
 };
 
 TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
@@ -60,13 +60,16 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
     }
   }
 
-
+  if( $('.queryPanelWidget tr').length > 1 ) { // this is hacky
+    $('.queryPanelWidget tr:last').remove();
+  }
   this.panel.addLabel('Subjects');
   if(this.subjectDropDown) {
     this.subjectDropDown.widget.html('');
   }
   this.subjectDropDown = new DropDownWidget(subjectsForTeacher, 'id', 'name');
   this.subjectDropDown.widget.on('change', this.changeSubjectCallback);
+
   this.queryFields.put('subject', this.subjectDropDown);
 
   this.panel.finish();
