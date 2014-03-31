@@ -4,7 +4,6 @@ function TeacherSubjectView() {
   console.log('Storage: ', Storage, this.userId);
 
   new HeaderWidget('Current subject for ' + Storage.get('userid') + ': [selected subject]');
-  // Set up as a component and put these calls in separate containers
   new LineBreakWidget();
   // if not Storage.get(userId)==teacher-subject:
   //    if loggedInUser can see TeacherDropdown
@@ -68,17 +67,19 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
     this.subjectDropDown.widget.html('');
   }
   this.subjectDropDown = new DropDownWidget(subjectsForTeacher, 'id', 'name');
-  this.subjectDropDown.widget.on('change', this.changeSubjectCallback);
+  this.subjectDropDown.widget.on('change', {'scope': this}, this.changeSubjectCallback);
 
   this.queryFields.put('subject', this.subjectDropDown);
 
   this.panel.finish();
 };
 
-TeacherSubjectView.prototype.changeSubjectCallback = function () {
-  // Listener for setting up selected teacher-subject
-  // Select the DOM and listen for changes
-  Storage.put('userid', 'asdf');
-  Storage.put('teacher-subject', '');
-  console.log('changed subject, update the teacher-subject in Storage');
+TeacherSubjectView.prototype.changeSubjectCallback = function (ev) {
+  // store userid and teacher-subject.  Split on '-' to parse teacher and subject.
+  var scope = ev ? ev.data.scope : this;
+  var teacher_subject = scope.queryFields.getValue('teacher')
+                        + "-" + scope.queryFields.getValue('subject');
+  Storage.put('userid', scope.userId);
+  Storage.put('teacher-subject', teacher_subject);
+  console.log('Update the teacher-subject in Storage', Storage);
 };
