@@ -23,7 +23,7 @@ function EditWorkSetView(workset) {
       Metis.remove(workset, this, function () {
         this.closeDialogBox();
         this.refreshAction.call();
-      })
+      });
     });
   }
 

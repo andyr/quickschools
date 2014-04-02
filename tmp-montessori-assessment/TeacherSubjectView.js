@@ -75,6 +75,7 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
 };
 
 TeacherSubjectView.prototype.changeSubjectCallback = function (ev) {
+  // TODO: store as JSON string
   // store userid and teacher-subject.  Split on '-' to parse teacher and subject.
   var scope = ev ? ev.data.scope : this;
   var teacher_subject = scope.queryFields.getValue('teacher')
