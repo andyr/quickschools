@@ -7,7 +7,7 @@ function WorkView(workset) {
   this.dialog = new FullPageDialog('Add/Edit Work');
 
   new PageHeaderWidget(workset.name + " Work Items");
-  new QuickAddButtonWidget('Add Work', this, 'clickedAddWork');
+  new QuickAddButtonWidget('Add Work', this, 'clickedAddWork', workset.id);
 
   this.workset = workset;
   var panel = new HorizontalPanelWidget("right", false);
@@ -38,21 +38,21 @@ WorkView.prototype.renderTable = function (worksetId) {
 
   workTable.addHeader('', 'Actions');
   workTable.addColumn(function (work) {
-    new ButtonWidget('Edit', this, 'clickedEditWork', work);
+    new ButtonWidget('Edit', this, 'clickedEditWork', worksetId, work);
   });
 
   workTable.renderMetisData(Metis, 'Work', new EqFilter('workSetId', worksetId));
   this.workTable = workTable;
 };
 
-WorkView.prototype.clickedEditWork = function (work) {
+WorkView.prototype.clickedEditWork = function (worksetId, work) {
   var dialog = new EditWorkView(work);
   dialog.setRefreshHandler(this, function () {
     this.workTable.renderMetisData(Metis, 'Work', new EqFilter('workSetId', work.workSetId));
   });
 };
 
-WorkView.prototype.clickedAddWork = function () {
+WorkView.prototype.clickedAddWork = function (worksetId) {
   console.log('clicked add work...');
 
   var dialog = new EditWorkView();
