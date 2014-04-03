@@ -44,10 +44,11 @@ TeacherSubjectView.prototype.renderSubjectDropDown = function (ev) {
 };
 
 TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
-  var subjectsForTeacher = [];
+  this.subjects = subjects;
   this.topMarker.setActive();
   console.log('collecting subjects for selected teacher: ', this.teacherId);
 
+  var subjectsForTeacher = [];
   for(var i=0; i<subjects.length; i++) {
     var subject = subjects[i];
     var teacherIds = $.map(subject['teachers'], function (teacher) { return teacher.id; });
@@ -72,15 +73,35 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
   this.queryFields.put('subject', this.subjectDropDown);
 
   this.panel.finish();
+
+  console.log('init subject callback...');
+  this.changeSubjectCallback();
 };
 
 TeacherSubjectView.prototype.changeSubjectCallback = function (ev) {
-  // TODO: store as JSON string
-  // store userid and teacher-subject.  Split on '-' to parse teacher and subject.
   var scope = ev ? ev.data.scope : this;
-  var teacher_subject = scope.queryFields.getValue('teacher')
-                        + "-" + scope.queryFields.getValue('subject');
-  Storage.put('userid', scope.userId);
-  Storage.put('teacher-subject', teacher_subject);
-  console.log('Update the teacher-subject in Storage', Storage);
+  var teacherid = scope.queryFields.getValue('teacher');
+  var subjectid = scope.queryFields.getValue('subject');
+
+  Storage.put('userId', scope.userId);
+  Storage.put('teacherId', teacherid);
+  Storage.put('sectionId', subjectid);
+  console.log('Storage: ', Storage);
+
+  // link subject and workset
+  var metisLoader = new MetisLoader('WorkSet');
+  Metis.load(metisLoader, scope, function () {
+    var worksets = metisLoader.getList();
+    var foundSubjectWorksetLink = false;
+    for(var i=0; i<worksets.length; i++) { // if this subjectId isn't in worksets
+      if(worksets[i].sectionId == subjectid) {
+        foundSubjectWorksetLink = true;
+        Storage.put('workSetId', worksets[i].id);  // TODO: use this to get list of work
+      }
+    }
+    if(!foundSubjectWorksetLink) {
+      // pick a workset
+      new SubjectWorksetLinkView(worksets, scope.subjects, subjectid);
+    }
+  });
 };
