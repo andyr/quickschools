@@ -6,6 +6,6 @@ function StudentNoteModel() {
   this.createdAt = new Date();
 }
 
-Metis.define(StudentNoteModel, 'Note', 'id', 'studentId', 'sectionId', 'note');
+Metis.define(StudentNoteModel, 'Note', 'id', 'studentId', 'sectionId', 'note', 'createdAt');
 Metis.defineSortColumn(StudentNoteModel, 'createdAt', 'desc');
 Metis.createGettersAndSetters(StudentNoteModel);

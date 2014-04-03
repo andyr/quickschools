@@ -16,11 +16,7 @@ function EditStudentNoteView(student, note) {
   //panel.addLabel('Student');
   panel.metadata = {};
   panel.metadata['studentId'] = student.id;
-  //this.queryFields.put('studentId', student.id);
-
-  //panel.addLabel('Section');
   panel.metadata['sectionId'] = '651974'; // section.id (from storage?)
-  //this.queryFields.put('sectionId', '651974');  // section.id (get JSON obj from Storage)
   
   panel.addLabel('Note');
   this.queryFields.put('note', new TextAreaWidget());
@@ -46,6 +42,7 @@ EditStudentNoteView.prototype.clickedSave = function () {
   this.note.setStudentId( this.panel.metadata['studentId'] );
   this.note.setSectionId( this.panel.metadata['sectionId'] );
   this.note.setNote( this.queryFields.getValue('note') );
+  this.note.setCreatedAt( new Date() );
 
   Metis.save(this.note, this, function () {
     this.closeDialogBox();

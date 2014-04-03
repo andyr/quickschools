@@ -28,15 +28,14 @@ StudentNoteView.prototype.clickedAddNote = function (student) {
   console.log('clicked add note');
   var dialog = new EditStudentNoteView(student);
   dialog.setRefreshHandler(this, function () {
-    //this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', this.student.id));
-    this.refreshTable();
+    this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.id));
   });
 };
 
 StudentNoteView.prototype.clickedEditNote = function (student, note) {
-  var dialog = new EditStudentNoteView(note);
+  console.log('clickedEditNote: ', arguments);
+  var dialog = new EditStudentNoteView(student, note);
   dialog.setRefreshHandler(this, function () {
-    //this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', this.student.id));
-    this.refreshTable();
+    this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.id));
   });
 };

@@ -62,6 +62,17 @@ function DBState() {
   }
 
 
-  resetAllWorksets();
+  //resetAllWorksets();
+
+  function resetAllNotes() {
+    var ml = new MetisLoader('Note');
+    Metis.load(ml, this, function () {
+      var notes = ml.getList();
+      console.log('deleting all notes:', notes);
+      Metis.remove(notes, this, function () {});
+    });
+  }
+
+  resetAllNotes();
 
 }
