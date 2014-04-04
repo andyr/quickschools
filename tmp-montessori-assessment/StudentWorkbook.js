@@ -14,7 +14,7 @@ function StudentWorkbook(student) {
   //this.classId = student.classId;
 
   new StudentNoteView(student);
-
+  new LineBreakWidget();
   new WorkStateView(student);
 
 }
