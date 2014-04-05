@@ -1,6 +1,4 @@
-function EditWorkView(workSetId, work) {
-  // @required: workSetId: metadata passed from the workset view
-  // @optional: work: work item being edited; null if adding new
+function EditWorkView(work) {
   ClassUtil.mixin(EditWorkView, this, Refreshable);
   ClassUtil.mixin(EditWorkView, this, Dialogable);
 
@@ -15,9 +13,6 @@ function EditWorkView(workSetId, work) {
     var worksets = metisLoader.getList();
     var panel = new QueryPanelWidget(leftWidth);
     this.queryFields = new QueryFields(panel, this.work);
-  
-    //  panel.addLabel('WorkSet');
-    //  this.queryFields.put('workSetId', new DropDownWidget(worksets, 'id', 'name'));
   
     panel.addLabel('Description');
     this.queryFields.put('description', new InputFieldWidget());
@@ -39,7 +34,6 @@ function EditWorkView(workSetId, work) {
 EditWorkView.prototype.clickedSave = function () {
   if(this.work == null) {
     this.work = new WorkModel();
-    //this.work.workSetId = this.queryFields.getValue('workSetId');
   }
   this.work.setWorkSetId( this.work.workSetId );
   this.work.setDescription(this.queryFields.getValue('description'));

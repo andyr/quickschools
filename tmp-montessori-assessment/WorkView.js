@@ -3,7 +3,6 @@ function WorkView(workset) {
   ClassUtil.mixin(WorkView, this, Refreshable);
   ClassUtil.mixin(WorkView, this, Dialogable);
 
-  // render a filtered metis list for this work set id
   this.dialog = new FullPageDialog('Add/Edit Work');
 
   new PageHeaderWidget(workset.name + " Work Items");
@@ -24,12 +23,6 @@ function WorkView(workset) {
 
 WorkView.prototype.renderTable = function (worksetId) {
   var workTable = new DataTableWidget(this, 'workTable');
-
-  // TODO: remove this column when done testing
-  workTable.addHeader('workSetId', 'workSetId', true);
-  workTable.addColumn(function (work) {
-    return work.getWorkSetId();
-  });
 
   workTable.addHeader('Description', 'description', true);
   workTable.addColumn(function (work) {
