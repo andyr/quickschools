@@ -21,18 +21,26 @@ function WorkStateView(student) {
 
     workStateTable.addHeader('Presented');
     workStateTable.addColumn(function (work) {
-      // TODO: initial empty state, replace with date and edit button
-      new ButtonWidget('Add Presented', this, 'clickedAddPresented', work, student);
+      var field = $('<span class="workstate-field">Loading...</span>');
+      field.data('work', work);
+      field.data('student', student);
+      field.data('state', 'Presented');
+
+      current.append(field);
     });
 
     workStateTable.addHeader('Practiced');
     workStateTable.addColumn(function (work) {
-      new ButtonWidget('Add Practiced', this, 'clickedAddPracticed', this);  // testing passing event to capture dom
+      var field = $('<span class="workstate-field">Loading...</span>');
+      field.data('work', work);
+      field.data('student', student);
+      field.data('state', 'Practiced');
+
+      current.append(field);
     });
 
     workStateTable.addHeader('Mastered');
     workStateTable.addColumn(function (work) {
-      //new ButtonWidget('Add Mastered', this, 'clickedAddMastered', work);
       var field = $('<span class="workstate-field">Loading...</span>');
       field.data('work', work);
       field.data('student', student);
@@ -43,71 +51,61 @@ function WorkStateView(student) {
 
     workStateTable.renderMetisData(Metis, 'Work', new EqFilter('workSetId', workSetId));
     workStateTable.setPostRender(this, 'initWorkStateData');
-
   });
 
 }
 
-WorkStateView.prototype.clickedAddPresented = function (work, student) {
-  console.log('clickedAddPresented', arguments);
+WorkStateView.prototype.initWorkStateData = function () {
+  var fields = this.workStateTable.widget.find('.workstate-field');
+  console.log('initWorkStateData', arguments, fields, this.workStateTable);
+
+  for(var i=0; i<fields.length; i++) {
+    var jqfield = $(fields[i]);
+    this.setWorkStateField(jqfield, [
+      new EqFilter('workId', jqfield.data('work').id),
+      new EqFilter('studentId', jqfield.data('student').id),
+      new EqFilter('state', jqfield.data('state'))
+    ]);
+  }
+};
+
+WorkStateView.prototype.setWorkStateField = function (jqfield, filters) {
+  var loader = new MetisLoader('WorkState');
+  loader.setFilters(filters);
+  Metis.load(loader, this, function () {
+    var workState = loader.getList();
+
+    if(workState.length == 0) {
+      var button = new ButtonWidget('Add '+ jqfield.data('state'), 
+                                    this, 
+                                    'clickedAddWorkState', 
+                                    jqfield.data('work'),
+                                    jqfield.data('student'),
+                                    jqfield.data('state'));
+      jqfield.html(button.widget);
+    } else {
+      // render a linked date which renders EditWorkStateView dialog
+      workState = workState[0];
+      var formattedDate = workState.getFormattedDate();
+      var link = new LinkWidget(formattedDate, this, function () {
+        this.clickedEditWorkState(jqfield, workState);
+      });
+      jqfield.html(link.widget);
+    }
+  });
+};
+
+WorkStateView.prototype.clickedAddWorkState = function (work, student, state) {
+  console.log('clickedAddWorkState', arguments);
   var workstate = new WorkStateModel();
-  workstate.setState('Presented');
+  workstate.setState(state);
   workstate.setWorkId(work.id);
   workstate.setStudentId(student.id);
   workstate.setDate(new Date());
   new EditWorkStateView(student, work, workstate);
 };
 
-WorkStateView.prototype.clickedEditPresented = function (workstate) {
-  // workstate has already been fetched for clicked work row
-  // load the dialog
+WorkStateView.prototype.clickedEditWorkState = function (jqfield, workState) {
+  console.log('clickedEditWorkState', arguments);
+  new EditWorkStateView(jqfield.data('student'), jqfield.data('work'), workState);
 };
-
-WorkStateView.prototype.clickedAddPracticed = function () {
-  console.log('clickedAddPracticed', arguments);
-};
-
-WorkStateView.prototype.clickedAddMastered = function (work) {
-
-};
-
-WorkStateView.prototype.initWorkStateData = function () {
-  
-  var fields = this.workStateTable.widget.find('.workstate-field');
-  console.log('initWorkStateData', arguments, fields, this.workStateTable);
-  
-
-  for(var i=0; i<fields.length; i++) {
-    var jqfield = $(fields[i]);
-    var filters = [
-      new EqFilter('workId', jqfield.data('work').id),
-      new EqFilter('studentId', jqfield.data('student').id),
-      new EqFilter('state', jqfield.data('state'))
-    ];
-    // setup a loader with the filters, fetch the data and replace the jqfield
-    console.log(
-      'Fetch data for: ',
-      jqfield, 
-      'workId=', 
-      jqfield.data('work').id, 
-      'studentId=', 
-      jqfield.data('student').id,
-      'state',
-      jqfield.data('state')
-    );
-
-    var workStateLoader = new MetisLoader('WorkState');
-    workStateLoader.setFilters(filters);
-    Metis.load(workStateLoader, this, function () {
-      var workState = workStateLoader.getList();
-      if(workState.length == 0) {
-        // not set, render the button
-        jqfield.html('n/a');
-      } else {
-        // render a linked date which renders EditWorkStateView dialog
-        workState = workState[0];
-      }
-    });
-  }
-};
-

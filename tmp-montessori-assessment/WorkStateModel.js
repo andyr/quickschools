@@ -12,14 +12,5 @@ Metis.defineSortColumn(WorkStateModel, 'date', 'desc');
 Metis.createGettersAndSetters(WorkStateModel);
 
 WorkStateModel.prototype.getFormattedDate = function (format) {
-  var _this = this;
-  format = '%m/%d/%Y';
-  dateFormatMap = {
-    '%m': 'getMonth',
-    '%d': 'getDate',
-    '%Y': 'getFullYear'
-  };
-  return $.map(format.split('/'), function (token) {
-    return _this.date[dateFormatMap[token]]();
-  }).join('/');
+  return this.date.toDateString().split(' ').slice(1).join(' ');
 };

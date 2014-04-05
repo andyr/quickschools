@@ -6,12 +6,15 @@ function EditWorkStateView(student, work, workstate) {
   this.work = work;
   this.student = student;
 
-  this.dialog = new Dialog('Add/Edit comment for work ' + workstate.state + 
-    ' on ' + workstate.date.getFullYear());
+  var formattedDate = workstate.getFormattedDate();
+  this.dialog = new Dialog(workstate.state + ' on ' + formattedDate);
   this.dialog.setOkCancel(this, 'clickedSave');
 
   var panel = new QueryPanelWidget(120);
   this.queryFields = new QueryFields(panel, workstate);
+
+  panel.addLabel('Date');
+  this.queryFields.put('date', new DateWidget(new Date()));
 
   panel.addLabel('Comment');
   this.queryFields.put('comment', new TextAreaWidget());
@@ -31,6 +34,7 @@ function EditWorkStateView(student, work, workstate) {
 
 EditWorkStateView.prototype.clickedSave = function () {
   this.workstate.setComment(this.queryFields.getValue('comment'));
+  this.workstate.setDate(new Date(this.queryFields.getValue('date')));
 
   Metis.save(this.workstate, this, function () {
     this.closeDialogBox();
