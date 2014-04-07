@@ -79,8 +79,7 @@ WorkStateView.prototype.setWorkStateField = function (jqfield, filters) {
       var button = new ButtonWidget('Add '+ jqfield.data('state'), 
                                     this, 
                                     'clickedAddWorkState', 
-                                    jqfield.data('work'),
-                                    jqfield.data('student'),
+                                    jqfield,
                                     jqfield.data('state'));
       jqfield.html(button.widget);
     } else {
@@ -95,17 +94,19 @@ WorkStateView.prototype.setWorkStateField = function (jqfield, filters) {
   });
 };
 
-WorkStateView.prototype.clickedAddWorkState = function (work, student, state) {
+WorkStateView.prototype.clickedAddWorkState = function (jqfield, state) {
   console.log('clickedAddWorkState', arguments);
-  var workstate = new WorkStateModel();
+  var workstate = new WorkStateModel(),
+      work = jqfield.data('work'),
+      student = jqfield.data('student');
   workstate.setState(state);
   workstate.setWorkId(work.id);
   workstate.setStudentId(student.id);
   workstate.setDate(new Date());
-  new EditWorkStateView(student, work, workstate);
+  new EditWorkStateView(jqfield, workstate, this);
 };
 
 WorkStateView.prototype.clickedEditWorkState = function (jqfield, workState) {
   console.log('clickedEditWorkState', arguments);
-  new EditWorkStateView(jqfield.data('student'), jqfield.data('work'), workState);
+  new EditWorkStateView(jqfield, workState, this);
 };

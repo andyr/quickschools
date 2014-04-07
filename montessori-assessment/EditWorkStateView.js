@@ -1,10 +1,10 @@
-function EditWorkStateView(student, work, workstate) {
+function EditWorkStateView(jqfield, workstate, parentView) {
   ClassUtil.mixin(EditWorkStateView, this, Refreshable);
   ClassUtil.mixin(EditWorkStateView, this, Dialogable);
 
+  this.jqfield = jqfield;
   this.workstate = workstate;
-  this.work = work;
-  this.student = student;
+  this.parentView = parentView;
 
   var formattedDate = workstate.getFormattedDate();
   this.dialog = new Dialog(workstate.state + ' on ' + formattedDate);
@@ -38,6 +38,11 @@ EditWorkStateView.prototype.clickedSave = function () {
 
   Metis.save(this.workstate, this, function () {
     this.closeDialogBox();
-    this.refreshAction.call();
+    //this.refreshAction.call();
+    this.parentView.setWorkStateField(this.jqfield, [
+      new EqFilter('workId', this.jqfield.data('work').id),
+      new EqFilter('studentId', this.jqfield.data('student').id),
+      new EqFilter('state', this.jqfield.data('state'))
+    ]);
   });
 };
