@@ -39,7 +39,7 @@ WorkView.prototype.renderTable = function (worksetId) {
 };
 
 WorkView.prototype.clickedEditWork = function (worksetId, work) {
-  var dialog = new EditWorkView(work);
+  var dialog = new EditWorkView(worksetId, work);
   dialog.setRefreshHandler(this, function () {
     this.workTable.renderMetisData(Metis, 'Work', new EqFilter('workSetId', work.workSetId));
   });
@@ -48,7 +48,7 @@ WorkView.prototype.clickedEditWork = function (worksetId, work) {
 WorkView.prototype.clickedAddWork = function (worksetId) {
   console.log('clicked add work...');
 
-  var dialog = new EditWorkView();
+  var dialog = new EditWorkView(worksetId);
   dialog.setRefreshHandler(this, function () {
     this.workTable.refreshTable();
   });

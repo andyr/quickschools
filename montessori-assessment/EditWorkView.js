@@ -1,9 +1,10 @@
-function EditWorkView(work) {
+function EditWorkView(worksetId, work) {
   ClassUtil.mixin(EditWorkView, this, Refreshable);
   ClassUtil.mixin(EditWorkView, this, Dialogable);
 
   this.dialog = new Dialog('Add/Edit Work');
   this.work = work;
+  this.workSetId = worksetId;
   this.dialog.setOkCancel(this, 'clickedSave');
 
   var leftWidth = 120;
@@ -35,7 +36,7 @@ EditWorkView.prototype.clickedSave = function () {
   if(this.work == null) {
     this.work = new WorkModel();
   }
-  this.work.setWorkSetId( this.work.workSetId );
+  this.work.setWorkSetId( this.workSetId );
   this.work.setDescription(this.queryFields.getValue('description'));
 
   Metis.save(this.work, this, function () {
