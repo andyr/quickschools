@@ -3,7 +3,8 @@ function TeacherSubjectView() {
   this.userId = globalVariables.userObject.getData("id");
   console.log('Storage: ', Storage, this.userId);
 
-  new HeaderWidget('Current subject for ' + Storage.get('userid') + ': [selected subject]');
+  // TODO: look up Teacher meta by userId
+  new HeaderWidget('Select subject for ' + Storage.get('userid'));
   new LineBreakWidget();
   // if not Storage.get(userId)==teacher-subject:
   //    if loggedInUser can see TeacherDropdown

@@ -1,7 +1,6 @@
 function StudentAssessmentView() {
   // render a data table from /sms/v1/students
-  new SpaceWidget(2);
-  new HeaderWidget('Students');
+  new HeaderWithIconWidget('Students');
   new LineBreakWidget();
 
   var studentTable = new DataTableWidget(this, 'studentTable');

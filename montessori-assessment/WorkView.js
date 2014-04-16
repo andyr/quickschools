@@ -5,7 +5,7 @@ function WorkView(workset) {
 
   this.dialog = new FullPageDialog('Add/Edit Work');
 
-  new PageHeaderWidget(workset.name + " Work Items");
+  new RecordHeaderWidget(workset.name + " Work Items");
   new QuickAddButtonWidget('Add Work', this, 'clickedAddWork', workset.id);
 
   this.workset = workset;

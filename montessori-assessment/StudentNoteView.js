@@ -3,7 +3,7 @@ function StudentNoteView(student) {
 
   //this.student = student; // classId = student.classId
 
-  new HeaderWidget('Notes for ' + student.fullName);
+  new HeaderWithIconWidget('Notes for ' + student.fullName);
   new QuickAddButtonWidget('Add a new note', this, 'clickedAddNote', student);
   new LineBreakWidget();
 

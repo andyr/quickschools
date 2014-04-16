@@ -10,7 +10,7 @@ function WorkStateView(student) {
     var workset = worksetLoader.getList();
     this.workset = workset[0];
 
-    new HeaderWidget('Work list for ' + this.workset.name);
+    new HeaderWithIconWidget('Work list for ' + this.workset.name);
     var workStateTable = new DataTableWidget(this, 'workStateTable');
     this.workStateTable = workStateTable;
 
