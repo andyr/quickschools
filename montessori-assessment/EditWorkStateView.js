@@ -22,7 +22,7 @@ function EditWorkStateView(jqfield, workstate, parentView) {
   panel.finish();
 
   if(workstate.id) {
-    new DeleteOption('Delete', 'Click to delete this workstate.', this, function () {
+    new DeleteOption('Delete', 'Click to delete this item.', this, function () {
       Metis.remove(workstate, this, function () {
         this.closeDialogBox();
         this.updateParentView();
