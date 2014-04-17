@@ -14,7 +14,7 @@ function EditWorkStateView(jqfield, workstate, parentView) {
   this.queryFields = new QueryFields(panel, workstate);
 
   panel.addLabel('Date');
-  this.queryFields.put('date', new DateWidget(new Date()));
+  this.queryFields.put('date', new DateWidget(workstate.getDate()));
 
   panel.addLabel('Comment');
   this.queryFields.put('comment', new TextAreaWidget());
@@ -25,7 +25,7 @@ function EditWorkStateView(jqfield, workstate, parentView) {
     new DeleteOption('Delete', 'Click to delete this workstate.', this, function () {
       Metis.remove(workstate, this, function () {
         this.closeDialogBox();
-        this.refreshAction.call();
+        this.updateParentView();
       });
     });
   }
@@ -38,11 +38,14 @@ EditWorkStateView.prototype.clickedSave = function () {
 
   Metis.save(this.workstate, this, function () {
     this.closeDialogBox();
-    //this.refreshAction.call();
-    this.parentView.setWorkStateField(this.jqfield, [
-      new EqFilter('workId', this.jqfield.data('work').id),
-      new EqFilter('studentId', this.jqfield.data('student').id),
-      new EqFilter('state', this.jqfield.data('state'))
-    ]);
+    this.updateParentView();
   });
+};
+
+EditWorkStateView.prototype.updateParentView = function () {
+  this.parentView.setWorkStateField(this.jqfield, [
+    new EqFilter('workId', this.jqfield.data('work').id),
+    new EqFilter('studentId', this.jqfield.data('student').id),
+    new EqFilter('state', this.jqfield.data('state'))
+  ]);
 };
