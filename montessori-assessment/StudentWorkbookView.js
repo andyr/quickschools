@@ -1,7 +1,7 @@
-function StudentWorkbook(student) {
+function StudentWorkbookView(student) {
   // This view constructs a FullPageDialog
-  ClassUtil.mixin(StudentWorkbook, this, Refreshable);
-  ClassUtil.mixin(StudentWorkbook, this, Dialogable);
+  ClassUtil.mixin(StudentWorkbookView, this, Refreshable);
+  ClassUtil.mixin(StudentWorkbookView, this, Dialogable);
 
   this.dialog = new FullPageDialog('Student Workbook');
 

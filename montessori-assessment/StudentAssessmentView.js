@@ -19,7 +19,7 @@ function StudentAssessmentView() {
   studentTable.setClickHandler(this, function (student) {
     console.log('Clicked a student: ', student);
 
-    var dialog = new StudentWorkbook(student);
+    var dialog = new StudentWorkbookView(student);
     dialog.setRefreshHandler(this, function () {
       this.studentTable.refreshTable();
     });
