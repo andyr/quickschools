@@ -14,3 +14,11 @@ section {
   margin: 0 auto;
   padding: 5px 5px 20px 5px;
 }
+
+.workstate-entry-wrapper {
+  padding: 5px;
+}
+
+.workstate-comment {
+  padding-left: 10px;
+}

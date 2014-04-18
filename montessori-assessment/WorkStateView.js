@@ -74,20 +74,30 @@ WorkStateView.prototype.setWorkStateField = function (jqfield, filters) {
   loader.setFilters(filters);
   Metis.load(loader, this, function () {
     var workStates = loader.getList();
+
     var button = new ButtonWidget(jqfield.data('state'), 
                                   this, 
                                   'clickedAddWorkState', 
                                   jqfield,
                                   jqfield.data('state'));
     jqfield.html(button.widget);
-    
+
     for(var i=0; i<workStates.length; i++) {
       workState = workStates[i];
       var formattedDate = workState.getFormattedDate();
       var link = new LinkWidget(formattedDate, this, function () {
         this.clickedEditWorkState(jqfield, workState);
       });
-      jqfield.append('<br/>').append(link.widget);
+
+      jqfield
+        .append( 
+          $('<div class="workstate-entry-wrapper"></div>')
+            .append(link.widget)
+            .append( 
+              workState.comment ? 
+                $('<span class="workstate-comment">'+workState.comment+'</span>') : '' 
+            )
+        );
     }
   });
 };
