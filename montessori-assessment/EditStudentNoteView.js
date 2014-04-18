@@ -38,11 +38,11 @@ function EditStudentNoteView(student, note) {
 EditStudentNoteView.prototype.clickedSave = function () {
   if(this.note == null) {
     this.note = new StudentNoteModel();
+    this.note.setCreatedAt( new Date() );
   }
   this.note.setStudentId( this.panel.metadata['studentId'] );
   this.note.setSectionId( this.panel.metadata['sectionId'] );
   this.note.setNote( this.queryFields.getValue('note') );
-  this.note.setCreatedAt( new Date() );
 
   Metis.save(this.note, this, function () {
     this.closeDialogBox();
