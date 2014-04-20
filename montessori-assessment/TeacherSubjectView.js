@@ -4,7 +4,9 @@ function TeacherSubjectView() {
   console.log('Storage: ', Storage, this.userId);
 
   // TODO: look up Teacher meta by userId
-  new HeaderWidget('Select subject for ' + Storage.get('userid'));
+  this.headerWidget = new HeaderWidget('');
+  this.headerWidget.widget.addClass('teacher-subject-header');
+
   new LineBreakWidget();
   // if not Storage.get(userId)==teacher-subject:
   //    if loggedInUser can see TeacherDropdown
@@ -84,10 +86,20 @@ TeacherSubjectView.prototype.changeSubjectCallback = function (ev) {
   var teacherid = scope.queryFields.getValue('teacher');
   var subjectid = scope.queryFields.getValue('subject');
 
+  var teacherWidget = scope.queryFields.getWidget('teacher');
+  var subjectWidget = scope.queryFields.getWidget('subject');
+
+  console.log(teacherWidget.widget, subjectWidget);
+  $('.teacher-subject-header').html(
+    teacherWidget.widget.find('option:selected').text() + ' - ' +
+    subjectWidget.widget.find('option:selected').text()
+  );
+
   Storage.put('userId', scope.userId);
   Storage.put('teacherId', teacherid);
   Storage.put('sectionId', subjectid);
   console.log('Storage: ', Storage);
+
 
   // link subject and workset
   var metisLoader = new MetisLoader('WorkSet');

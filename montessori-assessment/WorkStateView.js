@@ -90,7 +90,7 @@ WorkStateView.prototype.setWorkStateField = function (jqfield, filters) {
       });
 
       jqfield
-        .append( 
+        .append(
           $('<div class="workstate-entry-wrapper"></div>')
             .append(link.widget)
             .append( 

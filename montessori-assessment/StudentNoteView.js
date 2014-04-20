@@ -14,12 +14,12 @@ function StudentNoteView(student) {
     return note.getNote();
   });
 
-  notesTable.addHeader('Date', 'createdAt', true);
+  notesTable.addHeader('Date', 'createdAt', true, 200);
   notesTable.addColumn(function (note) {
     return note.getFormattedDate();
   });
 
-  notesTable.addHeader('', 'Actions', true);
+  notesTable.addHeader('', 'Actions', true, 80);
   notesTable.addColumn(function (note) {
     new ButtonWidget('Edit', this, 'clickedEditNote', student, note);
   });

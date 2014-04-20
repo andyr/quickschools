@@ -1,34 +1,38 @@
 function StudentAssessmentView() {
   // render a data table from /sms/v1/students
+  var _this = this;
   new HeaderWithIconWidget('Students');
+  var searchWidget = new SearchWidget('fullName');
   new LineBreakWidget();
+  this.topMarker = new MarkerWidget();
 
-  var studentTable = new DataTableWidget(this, 'studentTable');
-  this.studentTable = studentTable;
+  Rest.get('/sms/v1/sectionenrollments/' + Storage.get('sectionId'), 
+          {}, 
+          this, 
+          function (sectionEnrollments) {
+    console.log("sectionEnrollments", sectionEnrollments);
 
-  studentTable.addHeader('Id', 'id', true);
-  studentTable.addColumn(function (student) {
-    return student.id;
-  });
-
-  studentTable.addHeader('Name', 'fullName', true);
-  studentTable.addColumn(function (student) {
-    return student.fullName;
-  });
-
-  studentTable.setClickHandler(this, function (student) {
-    console.log('Clicked a student: ', student);
-
-    var dialog = new StudentWorkbookView(student);
-    dialog.setRefreshHandler(this, function () {
-      this.studentTable.refreshTable();
+    _this.topMarker.activate();
+    var studentTable = new DataTableWidget(this, 'studentTable');
+    this.studentTable = studentTable;
+    searchWidget.setTable(studentTable);
+  
+    studentTable.addHeader('Name', 'fullName', true);
+    studentTable.addColumn(function (student) {
+      return student.fullName;
     });
-  });
+  
+    studentTable.setClickHandler(this, function (student) {
+      console.log('Clicked a student: ', student);
+  
+      var dialog = new StudentWorkbookView(student);
+      dialog.setRefreshHandler(this, function () {
+        this.studentTable.refreshTable();
+      });
+    });
+  
+    studentTable.renderList(sectionEnrollments.students);
 
-  studentTable.setRestLoader(function (settings, callback) {
-    console.log("in setRestLoader... ", settings, callback)
-    Rest.get('/sms/v1/students', settings, callback);
   });
-  studentTable.render();
 
 };
