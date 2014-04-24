@@ -99,7 +99,7 @@ TeacherSubjectView.prototype.changeSubjectCallback = function (ev) {
   Storage.put('teacherId', teacherid);
   Storage.put('sectionId', subjectid);
   console.log('Storage: ', Storage);
-
+  $(window).trigger('updateStudentAssessmentView');
 
   // link subject and workset
   var metisLoader = new MetisLoader('WorkSet');

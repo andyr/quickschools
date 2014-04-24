@@ -2,27 +2,41 @@ function StudentAssessmentView() {
   // render a data table from /sms/v1/students
   var _this = this;
   new HeaderWithIconWidget('Students');
-  var searchWidget = new SearchWidget('fullName');
   new LineBreakWidget();
   this.topMarker = new MarkerWidget();
 
+  var studentTable = new DataTableWidget(this, 'studentTable');
+  this.studentTable = studentTable;
+  console.log("Before render  DataTableWidget:", _this.studentTable.widget);
+  this.render();
+
+  $(window).on('updateStudentAssessmentView', function () {
+    //console.log("DataTableWidget:", _this.studentTable.widget);
+    _this.studentTable.widget.find('tr:gt(0)').remove();
+    Rest.get('/sms/v1/sectionenrollments/' + Storage.get('sectionId'),
+      {},
+      _this,
+      function (sectionEnrollments) {
+        this.studentTable.renderList(sectionEnrollments.students);
+      });
+  });
+};
+
+StudentAssessmentView.prototype.render = function () {
   Rest.get('/sms/v1/sectionenrollments/' + Storage.get('sectionId'), 
           {}, 
           this, 
           function (sectionEnrollments) {
     console.log("sectionEnrollments", sectionEnrollments);
 
-    _this.topMarker.activate();
-    var studentTable = new DataTableWidget(this, 'studentTable');
-    this.studentTable = studentTable;
-    searchWidget.setTable(studentTable);
+    this.topMarker.activate();
   
-    studentTable.addHeader('Name', 'fullName', true);
-    studentTable.addColumn(function (student) {
+    this.studentTable.addHeader('Name', 'fullName', true);
+    this.studentTable.addColumn(function (student) {
       return student.fullName;
     });
   
-    studentTable.setClickHandler(this, function (student) {
+    this.studentTable.setClickHandler(this, function (student) {
       console.log('Clicked a student: ', student);
   
       var dialog = new StudentWorkbookView(student);
@@ -31,8 +45,6 @@ function StudentAssessmentView() {
       });
     });
   
-    studentTable.renderList(sectionEnrollments.students);
-
+    this.studentTable.renderList(sectionEnrollments.students);
   });
-
 };
