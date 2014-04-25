@@ -15,8 +15,8 @@ function EditStudentNoteView(student, note) {
   // fix these in hidden input fields, no label
   //panel.addLabel('Student');
   panel.metadata = {};
-  panel.metadata['studentId'] = student.id;
-  panel.metadata['sectionId'] = '651974'; // section.id (from storage?)
+  panel.metadata['studentId'] = student.smsStudentStubId;
+  panel.metadata['sectionId'] = Storage.get('sectionId'); // TODO: section.id (from storage?)
   
   panel.addLabel('Note');
   this.queryFields.put('note', new TextAreaWidget());

@@ -24,16 +24,16 @@ function StudentNoteView(student) {
     new ButtonWidget('Edit', this, 'clickedEditNote', student, note);
   });
 
-  notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.id));
+  notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.smsStudentStubId));
   this.notesTable = notesTable;
 
 }
 
 StudentNoteView.prototype.clickedAddNote = function (student) {
-  console.log('clicked add note');
+  console.log('clicked add note', student);
   var dialog = new EditStudentNoteView(student);
   dialog.setRefreshHandler(this, function () {
-    this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.id));
+    this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.smsStudentStubId));
   });
 };
 
@@ -41,6 +41,6 @@ StudentNoteView.prototype.clickedEditNote = function (student, note) {
   console.log('clickedEditNote: ', arguments);
   var dialog = new EditStudentNoteView(student, note);
   dialog.setRefreshHandler(this, function () {
-    this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.id));
+    this.notesTable.renderMetisData(Metis, 'Note', new EqFilter('studentId', student.smsStudentStubId));
   });
 };
