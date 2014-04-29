@@ -73,6 +73,23 @@ function DBState() {
     });
   }
 
-  resetAllNotes();
+  //resetAllNotes();
 
 }
+
+DBState.prototype.deleteTable = function (ml, table) {
+  Metis.load(ml, this, function () {
+    var records = ml.getList();
+    console.log('deleting all records from ' + table);
+    Metis.remove(records, this, function () {});
+  });
+};
+
+DBState.prototype.deleteAllData = function () {
+  var tables = ['Work', 'WorkSet', 'WorkState', 'Note'];
+  for(var i=0; i<tables.length; i++) {
+    var table = tables[i];
+    var ml = new MetisLoader(table);
+    this.deleteTable(ml, table);
+  }
+};

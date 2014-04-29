@@ -14,7 +14,7 @@ function EditWorkSetView(workset) {
   this.queryFields.put('name', new InputFieldWidget(), ['notEmpty']);
 
   panel.addLabel('Description');
-  this.queryFields.put('description', new InputFieldWidget());
+  this.queryFields.put('description', new TextAreaWidget());
 
   panel.finish();
 

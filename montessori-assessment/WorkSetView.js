@@ -7,12 +7,12 @@ function WorkSetView() {
   // render workset table: [name, description, edit]; link the name
   var worksetTable = new DataTableWidget(this, 'worksetTable');
 
-  worksetTable.addHeader('Name', 'name', true);
+  worksetTable.addHeader('Name', 'name', true, true, 300);
   worksetTable.addColumn(function (workset) {
     return workset.getName();
   });
 
-  worksetTable.addHeader('Description', 'description', true);
+  worksetTable.addHeader('Description', 'description', true, true);
   worksetTable.addColumn(function (workset) {
     return workset.getDescription();
   });
