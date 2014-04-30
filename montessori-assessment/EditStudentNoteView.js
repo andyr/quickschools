@@ -12,11 +12,9 @@ function EditStudentNoteView(student, note) {
   this.note = note;
   this.panel = panel;
 
-  // fix these in hidden input fields, no label
-  //panel.addLabel('Student');
   panel.metadata = {};
   panel.metadata['studentId'] = student.smsStudentStubId;
-  panel.metadata['sectionId'] = Storage.get('sectionId'); // TODO: section.id (from storage?)
+  panel.metadata['sectionId'] = Storage.get('sectionId');
   
   panel.addLabel('Note');
   this.queryFields.put('note', new TextAreaWidget());

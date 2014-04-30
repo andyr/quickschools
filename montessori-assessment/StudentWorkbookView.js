@@ -11,8 +11,6 @@ function StudentWorkbookView(student) {
   new LineBreakWidget();
   this.dialog.resetInsertPosition();
 
-  //this.classId = student.classId;
-
   new StudentNoteView(student);
   new LineBreakWidget(5);
   new WorkStateView(student);

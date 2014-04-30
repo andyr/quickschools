@@ -1,8 +1,5 @@
 function StudentNoteView(student) {
   // Most recent notest for a student; expanded state shows all (paginate list)
-
-  //this.student = student; // classId = student.classId
-
   new HeaderWithIconWidget('Notes for ' + student.fullName);
   new QuickAddButtonWidget('Add a new note', this, 'clickedAddNote', student);
   new LineBreakWidget();

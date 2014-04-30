@@ -1,5 +1,5 @@
 function StudentAssessmentView() {
-  // render a data table from /sms/v1/students
+  // render a data table from /sms/v1/studentenrollments/<sectionId>
   var _this = this;
   new HeaderWithIconWidget('Students');
   new LineBreakWidget();

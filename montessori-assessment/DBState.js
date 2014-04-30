@@ -93,3 +93,11 @@ DBState.prototype.deleteAllData = function () {
     this.deleteTable(ml, table);
   }
 };
+
+DBState.prototype.clearWorkState = function (id) {
+  var ml = new MetisLoader('WorkState', '495a91e9-f1cd-4a7b-ab38-b5db6ed6c013');
+  Metis.load(ml, this, function () {
+    var ws = ml.get();
+    Metis.remove(ws, this, function () {});
+  });
+};
