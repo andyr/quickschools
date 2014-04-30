@@ -6,6 +6,7 @@ function WorkStateView(student) {
   }
 
   var worksetLoader = new MetisLoader('WorkSet', workSetId);
+
   Metis.load(worksetLoader, this, function () {
     var workset = worksetLoader.getList();
     this.workset = workset[0];
@@ -63,14 +64,15 @@ WorkStateView.prototype.initWorkStateData = function () {
     var jqfield = $(fields[i]);
     this.setWorkStateField(jqfield, [
       new EqFilter('workId', jqfield.data('work').id),
-      new EqFilter('studentId', jqfield.data('student').id),
+      new EqFilter('studentId', jqfield.data('student').smsStudentStubId),
       new EqFilter('state', jqfield.data('state'))
     ]);
   }
 };
 
 WorkStateView.prototype.setWorkStateField = function (jqfield, filters) {
-  var loader = new MetisLoader('WorkState');
+  var _this = this,
+      loader = new MetisLoader('WorkState');
   loader.setFilters(filters);
   Metis.load(loader, this, function () {
     var workStates = loader.getList();
@@ -85,19 +87,19 @@ WorkStateView.prototype.setWorkStateField = function (jqfield, filters) {
     for(var i=0; i<workStates.length; i++) {
       workState = workStates[i];
       var formattedDate = workState.getFormattedDate();
-      var link = new LinkWidget(formattedDate, this, function () {
-        this.clickedEditWorkState(jqfield, workState);
+      var link = new LinkWidget(formattedDate, this, function () {});
+      link.widget.data('workstate', workState);
+      link.widget.click(function () {
+        _this.clickedEditWorkState(jqfield, $(this).data('workstate')); // get this obj from the dom
       });
 
       jqfield
-        .append(
-          $('<div class="workstate-entry-wrapper"></div>')
-            .append(link.widget)
-            .append( 
-              workState.comment ? 
-                $('<span class="workstate-comment">'+workState.comment+'</span>') : '' 
-            )
-        );
+        .append($('<div class="workstate-entry-wrapper"></div>')
+                .append(link.widget)
+                .append( 
+                  workState.comment ? 
+                    $('<span class="workstate-comment">'+workState.comment+'</span>') : '' 
+                ));
     }
   });
 };
@@ -109,7 +111,7 @@ WorkStateView.prototype.clickedAddWorkState = function (jqfield, state) {
       student = jqfield.data('student');
   workstate.setState(state);
   workstate.setWorkId(work.id);
-  workstate.setStudentId(student.id);
+  workstate.setStudentId(student.smsStudentStubId);
   workstate.setDate(new Date());
   new EditWorkStateView(jqfield, workstate, this);
 };

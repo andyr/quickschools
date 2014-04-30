@@ -45,7 +45,7 @@ EditWorkStateView.prototype.clickedSave = function () {
 EditWorkStateView.prototype.updateParentView = function () {
   this.parentView.setWorkStateField(this.jqfield, [
     new EqFilter('workId', this.jqfield.data('work').id),
-    new EqFilter('studentId', this.jqfield.data('student').id),
+    new EqFilter('studentId', this.jqfield.data('student').smsStudentStubId),
     new EqFilter('state', this.jqfield.data('state'))
   ]);
 };
