@@ -84,7 +84,7 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
 TeacherSubjectView.prototype.changeSubjectCallback = function (ev) {
   var scope = ev ? ev.data.scope : this;
   var teacherid = scope.queryFields.getValue('teacher');
-  var subjectid = scope.queryFields.getValue('subject');
+  var subjectid = scope.queryFields.getValue('subject') || ''; // null and undefined turn into "null" and "undefined" in Storage
 
   var teacherWidget = scope.queryFields.getWidget('teacher');
   var subjectWidget = scope.queryFields.getWidget('subject');
@@ -102,19 +102,21 @@ TeacherSubjectView.prototype.changeSubjectCallback = function (ev) {
   $(window).trigger('updateStudentAssessmentView');
 
   // link subject and workset
-  var metisLoader = new MetisLoader('WorkSet');
-  Metis.load(metisLoader, scope, function () {
-    var worksets = metisLoader.getList();
-    var foundSubjectWorksetLink = false;
-    for(var i=0; i<worksets.length; i++) { // if this subjectId isn't in worksets
-      if(worksets[i].sectionId == subjectid) {
-        foundSubjectWorksetLink = true;
-        Storage.put('workSetId', worksets[i].id);  // TODO: use this to get list of work
+  if(subjectid) {
+    var metisLoader = new MetisLoader('WorkSet');
+    Metis.load(metisLoader, scope, function () {
+      var worksets = metisLoader.getList();
+      var foundSubjectWorksetLink = false;
+      for(var i=0; i<worksets.length; i++) { // if this subjectid is in worksets
+        if(worksets[i].sectionId == subjectid) {
+          foundSubjectWorksetLink = true;
+          Storage.put('workSetId', worksets[i].id);
+        }
       }
-    }
-    if(!foundSubjectWorksetLink) {
-      // pick a workset
-      new SubjectWorksetLinkView(worksets, scope.subjects, subjectid);
-    }
-  });
+      if(!foundSubjectWorksetLink) {
+        // pick a workset
+        new SubjectWorksetLinkView(worksets, scope.subjects, subjectid);
+      }
+    });
+  }
 };
