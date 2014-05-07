@@ -6,70 +6,44 @@ function StudentAssessmentView() {
   this.topMarker = new MarkerWidget();
 
   var studentTable = new DataTableWidget(this, 'studentTable');
-  this.studentTable = studentTable;
-  console.log("Before render DataTableWidget:", _this.studentTable.widget);
-  this.render();
 
-  $(window).on('updateStudentAssessmentView', function () {
-    //console.log("DataTableWidget:", _this.studentTable.widget);
-    var sectionId = Storage.get('sectionId');
-    _this.studentTable.widget.find('tr:gt(0)').remove();
-    if(sectionId) {
-      Rest.get('/sms/v1/sectionenrollments/' + sectionId,
-        {},
-        _this,
-        function (sectionEnrollments) {
-          this.studentTable.renderList(sectionEnrollments.students);
-        });
-    } else {
-      _this.render();   // handles this error
-    }
+  studentTable.addHeader('Name', 'fullName', true);
+  studentTable.addColumn(function (student) {
+    return student.fullName;
   });
+
+  studentTable.setClickHandler(this, function (student) {
+    new StudentWorkbookView(student);
+  });
+
+  this.renderTable(studentTable);
+  $(window).on('updateStudentAssessmentView', function () {
+    _this.renderTable(studentTable);         
+  });
+
 };
 
-StudentAssessmentView.prototype.createStudentTable = function () {
-
-};
-
-StudentAssessmentView.prototype.destroyStudentTable = function () {
-
-};
-
-
-StudentAssessmentView.prototype.render = function () {
+StudentAssessmentView.prototype.renderTable = function (studentTable) {
   var sectionId = Storage.get('sectionId');
+
+  var msg = 'This teacher has no subjects available.'
+  var noStudentsText = $('<span class="no-subjects pre-wrap">'+msg+'</span>');
+  this.topMarker.activate();
+
   if(sectionId) {
-
-    Rest.get('/sms/v1/sectionenrollments/' + sectionId, 
-            {}, 
-            this, 
-            function (sectionEnrollments) {
-      console.log("sectionEnrollments", sectionEnrollments);
-  
-      this.topMarker.activate();
-    
-      this.studentTable.addHeader('Name', 'fullName', true);
-      this.studentTable.addColumn(function (student) {
-        return student.fullName;
-      });
-    
-      this.studentTable.setClickHandler(this, function (student) {
-        console.log('Clicked a student: ', student);
-    
-        var dialog = new StudentWorkbookView(student);
-        dialog.setRefreshHandler(this, function () {
-          this.studentTable.refreshTable();
-        });
-      });
-    
-      this.studentTable.renderList(sectionEnrollments.students);
+    $('section.student-notes .no-subjects').remove();
+    studentTable.widget.show();
+    Rest.get('/sms/v1/sectionenrollments/' + sectionId,
+             {},
+             this,
+             function (sectionEnrollments) {
+      studentTable.renderList(sectionEnrollments.students);      
     });
-
   } else {
-    this.topMarker.activate();
-    new TextWidget("This teacher has no subjects available."); 
-    // TODO: write some table init stuff
-    // call that independently -- figure out rendering sequence, etc.
+    studentTable.widget.hide();
+    $('section.student-notes .no-subjects').remove();
+    $('section.student-notes').append(noStudentsText);
   }
 };
+
 

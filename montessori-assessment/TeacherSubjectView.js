@@ -31,7 +31,7 @@ TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) 
   this.panel = new QueryPanelWidget(250);
 
   this.queryFields = new QueryFields(this.panel); // don't use the initDynamicInfo arg, produces error
-  this.panel.addLabel('Teachers');
+  this.panel.addLabel('Teacher');
 
   this.teacherDropdown = new DropDownWidget(this.teachers, 'id', 'fullName')
   this.queryFields.put('teacher', this.teacherDropdown); // prepend title in value
@@ -66,7 +66,7 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
   if( $('.queryPanelWidget tr').length > 1 ) { // this is hacky
     $('.queryPanelWidget tr:last').remove();
   }
-  this.panel.addLabel('Subjects');
+  this.panel.addLabel('Subject');
   if(this.subjectDropDown) {
     this.subjectDropDown.widget.html('');
   }
@@ -74,10 +74,18 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
   this.subjectDropDown.widget.on('change', {'scope': this}, this.changeSubjectCallback);
 
   this.queryFields.put('subject', this.subjectDropDown);
-
   this.panel.finish();
 
-  console.log('init subject callback...');
+  // Check Storage for saved teacher-subject
+  var teacherId = Storage.get('teacherId') || null;
+  var subjectId = Storage.get('sectionId') || null;
+  if(teacherId) {
+    this.queryFields.setValue('teacher', teacherId);
+  }
+  if(subjectId) {
+    this.queryFields.setValue('subject', sectionId);
+  }
+
   this.changeSubjectCallback();
 };
 
