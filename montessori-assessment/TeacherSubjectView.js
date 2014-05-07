@@ -35,7 +35,9 @@ TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) 
 
   this.teacherDropdown = new DropDownWidget(this.teachers, 'id', 'fullName')
   this.queryFields.put('teacher', this.teacherDropdown); // prepend title in value
-  this.teacherDropdown.widget.on('change', {'scope': this}, this.renderSubjectDropDown);
+  this.teacherDropdown.widget.on('change', 
+                                  {'scope': this, 'teacherchanged': true}, 
+                                  this.renderSubjectDropDown);
   this.renderSubjectDropDown();
 
 };
@@ -43,6 +45,7 @@ TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) 
 TeacherSubjectView.prototype.renderSubjectDropDown = function (ev) {
   var scope = ev ? ev.data.scope : this;
   scope.teacherId = scope.queryFields.getValue('teacher');
+  scope.teacherchanged = ev ? true : false;
   Rest.get('/sms/v1/sections', {}, scope, scope.subjectDropdownCallback);
 };
 
@@ -77,13 +80,14 @@ TeacherSubjectView.prototype.subjectDropdownCallback = function (subjects) {
   this.panel.finish();
 
   // Check Storage for saved teacher-subject
-  var teacherId = Storage.get('teacherId') || null;
-  var subjectId = Storage.get('sectionId') || null;
-  if(teacherId) {
+  var teacherId = Storage.get('teacherId') || '';
+  var subjectId = Storage.get('sectionId') || '';
+  if(!this.teacherchanged) {
     this.queryFields.setValue('teacher', teacherId);
-  }
-  if(subjectId) {
-    this.queryFields.setValue('subject', sectionId);
+    //this.queryFields.getWidget('teacher').widget.val(teacherId).change();
+
+    this.queryFields.setValue('subject', subjectId);
+    //this.queryFields.getWidget('subject').widget.val(subjectId).change();
   }
 
   this.changeSubjectCallback();
