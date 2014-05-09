@@ -3,21 +3,15 @@ function TeacherSubjectView() {
   this.userId = globalVariables.userObject.getData("id");
   console.log('Storage: ', Storage, this.userId);
 
-  // TODO: look up Teacher meta by userId
   this.headerWidget = new HeaderWidget('');
   this.headerWidget.widget.addClass('teacher-subject-header');
 
   new LineBreakWidget();
-  // if not Storage.get(userId)==teacher-subject:
-  //    if loggedInUser can see TeacherDropdown
   this.topMarker = new MarkerWidget(); // Mark UI position for rendering
+
+  this.detectTeacher = Metis.hasAccess('montessori-teacher');
+  console.log('Metis.hasAccess montessori-teacher', this.detectTeacher);
   this.renderTeacherDropdown();
-  //    else
-  //      teacherId = userId
-  //      this.renderSubjectDropDown(teacherId);
-  // listen for changes to either and invoke callbacks
-  //    Storage.put(teacher-subject(s?))
-  //    update the header widget display
 }
 
 TeacherSubjectView.prototype.renderTeacherDropdown = function () {
@@ -26,6 +20,23 @@ TeacherSubjectView.prototype.renderTeacherDropdown = function () {
 
 TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) {
   this.teachers = pagedTeachers.list;
+
+  // if role==teacher: this.teachers = [only logged in teacherid]
+  if(this.detectTeacher) { 
+    var updatedTeacherList = [];
+    var fullName = globalVariables.userObject.firstName;
+    var lname = globalVariables.userObject.lastName;
+    if(lname) {
+      fullName += " " + lname;
+    }
+
+    for(var i=0; i<this.teachers.length; i++) {
+      if(this.teachers[i].fullName == fullName) {
+        updatedTeacherList = [this.teachers[i]];
+      }
+    }
+    this.teachers = updatedTeacherList;
+  }
 
   this.topMarker.activate();
   this.panel = new QueryPanelWidget(250);
