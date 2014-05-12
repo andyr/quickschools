@@ -15,7 +15,10 @@ function TeacherSubjectView() {
 }
 
 TeacherSubjectView.prototype.renderTeacherDropdown = function () {
-  Rest.get('/sms/v1/teachers', {}, this, this.teacherDropdownCallback);
+  Rest.get('/sms/v1/teachers', 
+            {fields: 'userId', itemsPerPage: 1000}, 
+            this, 
+            this.teacherDropdownCallback);
 };
 
 TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) {
@@ -24,14 +27,9 @@ TeacherSubjectView.prototype.teacherDropdownCallback = function (pagedTeachers) 
   // if role==teacher: this.teachers = [only logged in teacherid]
   if(this.detectTeacher) { 
     var updatedTeacherList = [];
-    var fullName = globalVariables.userObject.firstName;
-    var lname = globalVariables.userObject.lastName;
-    if(lname) {
-      fullName += " " + lname;
-    }
 
     for(var i=0; i<this.teachers.length; i++) {
-      if(this.teachers[i].fullName == fullName) {
+      if('userId' in this.teachers[i]) {
         updatedTeacherList = [this.teachers[i]];
       }
     }

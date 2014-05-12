@@ -37,7 +37,12 @@ StudentAssessmentView.prototype.renderTable = function (studentTable) {
              {},
              this,
              function (sectionEnrollments) {
-      studentTable.renderList(sectionEnrollments.students);      
+      var sortedStudents = sectionEnrollments.students.sort(function(a,b) {
+        if(a.fullName > b.fullName) return 1;
+        else if(a.fullName == b.fullName) return 0;
+        else return -1;
+      });
+      studentTable.renderList(sortedStudents);
     });
   } else {
     studentTable.widget.hide();

@@ -5,6 +5,12 @@ function SubjectWorksetLinkView(worksets, subjects, subjectId) {
   this.worksets = worksets;
   this.subjectId = subjectId;
 
+  if(worksets.length == 0) {
+    new MessageDialog('Please configure worksets first', 
+                      'Before you can start tracking progress for a subject, you must first create some worksets.  Please go to the "Setup" submenu on the top to create worksets.');
+    return;
+  }
+
   var subjectName = '';
   for(var i=0; i<subjects.length; i++) {
     if(subjectId == subjects[i].id) {
